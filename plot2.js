@@ -39,12 +39,12 @@ d3.csv("merged_data_final2.csv").then(function(finalData) {
 
   // Create scaling function for closing price
   var yLinearScale1 = d3.scaleLinear()
-    .domain([0, d3.max(finalData, d => d.close)])
+    .domain([d3.min(finalData, d => d.close), d3.max(finalData, d => d.close)])
     .range([height, 0]);
 
   // Create scaling function for new stations
   var yLinearScale2 = d3.scaleLinear()
-    .domain([0, d3.max(finalData, d => d.index1)])
+    .domain([d3.min(finalData, d => d.index1), d3.max(finalData, d => d.index1)])
     .range([height, 0]);
 
   // Create functions for the axes
@@ -107,13 +107,31 @@ d3.csv("merged_data_final2.csv").then(function(finalData) {
   var bisect = d3.bisector(function(d) { return d.xTimeScale; }).left;
 
   // Create a circle to travel along the curve of the plot
-  var focus = chartGroup.append('g').append('circle').style("fill", "none").attr('r', 5).style("opacity", 0)
+  var focus = chartGroup.append('g')
+                        .append('circle')
+                        .style("fill", "none")
+                        .attr("stroke", "black")
+                        .attr('r', 5)
+                        .style("opacity", 0)
 
   // Create text to travel along the curve of the plot
-  var focusText = chartGroup.append('g').append('text').style("opacity", 0).attr("text-anchor", "left").attr("alignment-baseline", "middle")
+  var focusText = chartGroup.append('g')
+                            .append('text')
+                            .style("opacity", 0)
+                            .attr("text-anchor", "left")
+                            .attr("alignment-baseline", "middle")
 
   // Create a rectangle to track user mouse position
-  chartGroup.append('rect').style("fill", "none").style("pointer-events", "all").attr('width', width).attr('height', height).on('mouseover', mouseover).on('mousemove', mousemove).on('mouseout', mouseout);
+  chartGroup.append('rect')
+            .style("fill", "none")
+            .style("pointer-events", "all")
+            .attr('width', width)
+            .attr('height', height)
+            .on('mouseover', mouseover)
+            .on('mousemove', mousemove)
+            .on('mouseout', mouseout);
+
+
 
   // What happens when the mouse move -> show the annotations at the right positions.
   function mouseover() {
@@ -129,10 +147,12 @@ d3.csv("merged_data_final2.csv").then(function(finalData) {
     focus
       .attr("cx", xTimeScale(selectedData.date))
       .attr("cy", yLinearScale1(selectedData.close))
+      .attr("cy", yLinearScale2(selectedData.index1))
     focusText
       .html("date:" + selectedData.date + " / " + "close:" + selectedData.close)
-      .attr("date", xTimeScale(selectedData.date))
+      .attr("date", xTimeScale(selectedData.date) + 15)
       .attr("close", yLinearScale1(selectedData.close))
+      .attr("index", yLinearScale2(selectedData.index1))
     }
   function mouseout() {
     focus.style("opacity", 0)
