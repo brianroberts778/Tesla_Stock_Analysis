@@ -7,3 +7,8 @@ We propose to map and visualize how Tesla charging stations have been growing at
 Tesla charging ports(web-scrape pending): https://supercharge.info/data
 
 
+<img width="808" alt="teslagraph" src="https://user-images.githubusercontent.com/70656160/113898303-be188300-9799-11eb-9f60-4bc4099ea4c2.png">
+
+
+
+
